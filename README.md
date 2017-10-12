@@ -4,7 +4,7 @@ Compacts a SilverStripe source code into a deployable state with composer
 
 ## Wat?
 
-it basically runs three commands:
+This is a docker container that runs three commands:
 
  - composer validate
  - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
