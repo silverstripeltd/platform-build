@@ -8,6 +8,7 @@ RUN ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 RUN ssh-keyscan code.platform.silverstripe.com >> ~/.ssh/known_hosts
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY git.sh /git.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
