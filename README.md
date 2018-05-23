@@ -1,8 +1,8 @@
-# Tamper
+# Platform Build
 
 Compacts a SilverStripe source code into a deployable state with composer
 
-## Wat?
+## What is this?
 
 This is a docker container that runs three commands:
 
@@ -21,7 +21,7 @@ docker run \
     --volume composer_cache:/tmp/cache \
     --volume ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro \
     --volume $PWD:/app \
-    stojg/tamper
+    silverstripe/platform-build
 ```
 
 `--volume composer_cache:/tmp/cache`

@@ -24,4 +24,6 @@ composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --o
 echo
 echo /tmp/vendor/bin/vendor-plugin-helper copy ./
 /tmp/vendor/bin/vendor-plugin-helper copy ./
+echo tar -czf /app.tar.gz .
+tar -czf /app.tar.gz .
 

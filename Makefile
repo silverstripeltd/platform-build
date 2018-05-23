@@ -1,2 +1,2 @@
 all:
-	docker build . -t stojg/tamper:latest
+	docker build . -t silverstripe/platform-build:latest
