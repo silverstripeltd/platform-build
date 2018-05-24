@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+if [ -d ".git" ]; then
+    SHA=$(git rev-parse HEAD)
+    rm -rf .git/
+else
+    echo "Unable to determine SHA, failing."
+    exit 1
+fi
+
 if [ ! -z "$@" ]; then
     exec "$@"
 fi
@@ -15,15 +23,58 @@ else
     chmod 0600 ~/.ssh/id_rsa
 fi
 
-echo
 echo composer validate
 composer validate
-echo
-echo composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-echo
-echo /tmp/vendor/bin/vendor-plugin-helper copy ./
-/tmp/vendor/bin/vendor-plugin-helper copy ./
-echo tar -czf /app.tar.gz .
-tar -czf /app.tar.gz .
 
+echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
+composer install \
+    --no-progress \
+    --no-scripts \
+    --prefer-dist \
+    --no-dev \
+    --ignore-platform-reqs \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-suggest
+
+# Now that composer has ran, we can test for ss4
+if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
+    echo "SilverStripe 3 detected. Skipping module exposure."
+    # manifest expects tar to uncompress to a folder called site - required for bc
+    cd ../
+    mkdir -p site
+    # working dir looks like this on live "payload-source-a80a63b8223e30248e204f1fa9cbac13c8738b3f.zip"
+    RESULT="0"
+    cp -rp payload-source-"$SHA".zip/. site || RESULT="$?"
+    if [ "$RESULT" -ne "0" ]; then
+        # locally the working dir is app
+        cp -rp app/. site
+    fi
+    tar -czf /payload-source-"$SHA".tgz site
+    exit 0
+fi
+
+echo "SilverStripe 4 detected. Running 'composer vendor-expose'."
+
+# This is the preferred method of exposing the resources in SS4.
+echo composer vendor-expose copy
+RETVAL="0"
+composer vendor-expose copy || RETVAL=$?
+
+if [ "$RETVAL" -gt "0" ]; then
+    echo "[WARNING] 'composer vendor-expose' failed. Falling back to vendor-plugin-helper." >&2
+    /tmp/vendor/bin/vendor-plugin-helper copy ./
+fi
+
+# manifest expects tar to uncompress to a folder called site - required for bc
+cd ../
+mkdir -p site
+# working dir looks like this on live "payload-source-a80a63b8223e30248e204f1fa9cbac13c8738b3f.zip"
+RESULT="0"
+cp -rp payload-source-"$SHA".zip/. site || RESULT="$?"
+if [ "$RESULT" -ne "0" ]; then
+    # locally the working dir is app
+    cp -rp app/. site
+fi
+tar -czf /payload-source-"$SHA".tgz site
+tar -czf /payload-source-"$SHA".tgz site
