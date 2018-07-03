@@ -13,8 +13,6 @@ if [ ! -z "$@" ]; then
     exec "$@"
 fi
 
-export COMPOSER_PROCESS_TIMEOUT=1200
-
 if [[ "z${IDENT_KEY}" == "z" ]]; then
     echo "No deploy key set"
 else
@@ -23,16 +21,25 @@ else
     chmod 0600 ~/.ssh/id_rsa
 fi
 
-echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-composer install \
-    --no-progress \
-    --no-scripts \
-    --prefer-dist \
-    --no-dev \
-    --ignore-platform-reqs \
-    --optimize-autoloader \
-    --no-interaction \
-    --no-suggest
+export COMPOSER_PROCESS_TIMEOUT=1200
+
+if [ -f "composer.json" ]; then
+    echo composer validate
+    composer validate
+
+    echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
+    composer install \
+        --no-progress \
+        --no-scripts \
+        --prefer-dist \
+        --no-dev \
+        --ignore-platform-reqs \
+        --optimize-autoloader \
+        --no-interaction \
+        --no-suggest
+else
+    echo "No composer.json present, skipping composer install."
+fi
 
 # Now that composer has ran, we can test for ss4
 if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
