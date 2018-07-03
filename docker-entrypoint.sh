@@ -23,9 +23,6 @@ else
     chmod 0600 ~/.ssh/id_rsa
 fi
 
-echo composer validate
-composer validate
-
 echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
 composer install \
     --no-progress \
