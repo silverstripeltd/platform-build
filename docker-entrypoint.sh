@@ -81,4 +81,3 @@ if [ "$RESULT" -ne "0" ]; then
     cp -rp app/. site
 fi
 tar -czf /payload-source-"$SHA".tgz site
-tar -czf /payload-source-"$SHA".tgz site
