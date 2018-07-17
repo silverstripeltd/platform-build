@@ -25,7 +25,7 @@ export COMPOSER_PROCESS_TIMEOUT=1200
 
 if [ -f "composer.json" ]; then
     echo composer validate
-    composer validate
+    composer validate || true
 
     echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
     composer install \
