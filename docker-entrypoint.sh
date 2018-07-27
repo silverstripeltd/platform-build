@@ -3,7 +3,6 @@ set -e
 
 if [ -d ".git" ]; then
     SHA=$(git rev-parse HEAD)
-    rm -rf .git/
 else
     echo "Unable to determine SHA, failing."
     exit 1
@@ -72,6 +71,9 @@ if [ "$RETVAL" -gt "0" ]; then
     echo "[WARNING] 'composer vendor-expose' failed. Falling back to vendor-plugin-helper." >&2
     /tmp/vendor/bin/vendor-plugin-helper copy ./
 fi
+
+# Remove git repository
+rm -rf .git/
 
 # manifest expects tar to uncompress to a folder called site - required for bc
 cd ../
