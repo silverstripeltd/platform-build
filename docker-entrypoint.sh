@@ -46,6 +46,10 @@ fi
 # Now that composer has ran, we can test for ss4
 if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
     echo "SilverStripe 3 detected. Skipping module exposure."
+
+    # Remove git repository
+	rm -rf .git/
+
     # manifest expects tar to uncompress to a folder called site - required for bc
     cd ../
     mkdir -p site
