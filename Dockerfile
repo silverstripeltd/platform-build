@@ -7,6 +7,7 @@ RUN chmod 400 ~/.ssh/config
 
 RUN composer global require silverstripe/vendor-plugin-helper
 
+COPY funcs.sh /funcs.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

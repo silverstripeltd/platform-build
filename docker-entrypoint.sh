@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+source /funcs.sh
+
 if [ -d ".git" ]; then
     SHA=$(git rev-parse HEAD)
 else
     echo "Unable to determine SHA, failing."
     exit 1
-fi
-
-if [ ! -z "$@" ]; then
-    exec "$@"
 fi
 
 if [[ "z${IDENT_KEY}" == "z" ]]; then
@@ -20,63 +18,10 @@ else
     chmod 0600 ~/.ssh/id_rsa
     FINGER_PRINT=$(ssh-keygen -E md5 -lf ~/.ssh/id_rsa | awk '{ print $2 }' | cut -c 5-)
     echo "Using deploy key ${FINGER_PRINT}"
-
 fi
 
-export COMPOSER_PROCESS_TIMEOUT=1200
+composer_install
 
-if [ -f "composer.json" ]; then
-    echo composer validate
-    composer validate || true
+vendor_expose
 
-    echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-    composer install \
-        --no-progress \
-        --no-scripts \
-        --prefer-dist \
-        --no-dev \
-        --ignore-platform-reqs \
-        --optimize-autoloader \
-        --no-interaction \
-        --no-suggest
-else
-    echo "No composer.json present, skipping composer install."
-fi
-
-WORKING_DIR=${PWD##*/}
-
-# Now that composer has ran, we can test for ss4
-if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
-    echo "SilverStripe 3 detected. Skipping module exposure."
-
-    # Remove git repository
-	rm -rf .git/
-
-    # manifest expects tar to uncompress to a folder called site - required for bc
-    cd ../
-    mkdir -p site
-    cp -rp "$WORKING_DIR"/. site
-    tar -czf /payload-source-"$SHA".tgz site
-    exit 0
-fi
-
-echo "SilverStripe 4 detected. Running 'composer vendor-expose'."
-
-# This is the preferred method of exposing the resources in SS4.
-echo composer vendor-expose copy
-RETVAL="0"
-composer vendor-expose copy || RETVAL=$?
-
-if [ "$RETVAL" -gt "0" ]; then
-    echo "[WARNING] 'composer vendor-expose' failed. Falling back to vendor-plugin-helper." >&2
-    /tmp/vendor/bin/vendor-plugin-helper copy ./
-fi
-
-# Remove git repository
-rm -rf .git/
-
-# manifest expects tar to uncompress to a folder called site - required for bc
-cd ../
-mkdir -p site
-cp -rp "$WORKING_DIR"/. site
-tar -czf /payload-source-"$SHA".tgz site
+package_source ${SHA}
