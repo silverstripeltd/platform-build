@@ -43,6 +43,8 @@ else
     echo "No composer.json present, skipping composer install."
 fi
 
+WORKING_DIR=${PWD##*/}
+
 # Now that composer has ran, we can test for ss4
 if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
     echo "SilverStripe 3 detected. Skipping module exposure."
@@ -53,13 +55,7 @@ if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
     # manifest expects tar to uncompress to a folder called site - required for bc
     cd ../
     mkdir -p site
-    # working dir looks like this on live "payload-source-a80a63b8223e30248e204f1fa9cbac13c8738b3f.zip"
-    RESULT="0"
-    cp -rp payload-source-"$SHA".zip/. site || RESULT="$?"
-    if [ "$RESULT" -ne "0" ]; then
-        # locally the working dir is app
-        cp -rp app/. site
-    fi
+    cp -rp "$WORKING_DIR"/. site
     tar -czf /payload-source-"$SHA".tgz site
     exit 0
 fi
@@ -82,11 +78,5 @@ rm -rf .git/
 # manifest expects tar to uncompress to a folder called site - required for bc
 cd ../
 mkdir -p site
-# working dir looks like this on live "payload-source-a80a63b8223e30248e204f1fa9cbac13c8738b3f.zip"
-RESULT="0"
-cp -rp payload-source-"$SHA".zip/. site || RESULT="$?"
-if [ "$RESULT" -ne "0" ]; then
-    # locally the working dir is app
-    cp -rp app/. site
-fi
+cp -rp "$WORKING_DIR"/. site
 tar -czf /payload-source-"$SHA".tgz site
