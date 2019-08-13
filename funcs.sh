@@ -6,6 +6,7 @@ function composer_install {
 	fi
 
 	export COMPOSER_PROCESS_TIMEOUT=1200
+	export SS_VENDOR_METHOD="copy"
 	echo composer validate
     composer validate || true
 
@@ -18,24 +19,6 @@ function composer_install {
         --optimize-autoloader \
         --no-interaction \
         --no-suggest
-}
-
-function vendor_expose {
-	# Now that composer has ran, we can test for ss4
-	if [ ! -d "vendor/silverstripe/vendor-plugin" ]; then
-		echo "SilverStripe 3 detected. Skipping module exposure."
-		return 0
-	fi
-
-	echo "SilverStripe 4 detected. Running 'composer vendor-expose'."
-	echo composer vendor-expose copy
-	RETVAL="0"
-	composer vendor-expose copy || RETVAL=$?
-
-	if [ "$RETVAL" -gt "0" ]; then
-		echo "[WARNING] 'composer vendor-expose' failed. Falling back to vendor-plugin-helper." >&2
-		/tmp/vendor/bin/vendor-plugin-helper copy ./
-	fi
 }
 
 function package_source {

@@ -22,6 +22,4 @@ fi
 
 composer_install
 
-vendor_expose
-
 package_source ${SHA}
