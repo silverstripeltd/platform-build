@@ -9,10 +9,9 @@ function composer_install {
 	echo composer validate
     composer validate || true
 
-    echo composer install --no-progress --no-scripts --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
+    echo composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
     composer install \
         --no-progress \
-        --no-scripts \
         --prefer-dist \
         --no-dev \
         --ignore-platform-reqs \
