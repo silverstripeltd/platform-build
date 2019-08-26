@@ -22,4 +22,16 @@ fi
 
 composer_install
 
+# Run NPM/Yarn build script if the scp-build command is defined
+if [[ -f package.json && "`cat package.json | jq '.scripts["scp-build"]?'`" != "null" ]]; then
+    nvm_switch
+
+    node_build
+fi
+
+# Run Composer build script if the scp-build command is defined
+if [[ -f composer.json && "`cat composer.json | jq '.scripts["scp-build"]?'`" != "null" ]]; then
+	composer_build
+fi
+
 package_source ${SHA}
