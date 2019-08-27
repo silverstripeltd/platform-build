@@ -1,16 +1,15 @@
 # Platform Build
 
-Compacts a SilverStripe source code into a deployable state with composer
+Compacts a SilverStripe codebase into a deployable state with Composer and Node
 
 ## What is this?
 
-This is a docker container that runs three commands:
+This is a docker container that runs a series of commands:
 
  - composer validate
  - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-
-and lastly, the silverstripe [vendor plugin](https://github.com/silverstripe/vendor-plugin-helper)
- - vendor-plugin-helper copy ./
+ - npm install + npm run scp-build (if the `scp-build` script is present) (will use Yarn instead if the codebase requires it)
+ - composer run scp-build (if the `scp-build` script is present)
 
 ## Example usage
 
