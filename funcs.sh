@@ -5,29 +5,44 @@ function composer_install {
 	fi
 
 	export COMPOSER_PROCESS_TIMEOUT=1200
-	export SS_VENDOR_METHOD="copy"
-	echo composer validate
-    composer validate || true
 
-    echo composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
-    composer install \
-        --no-progress \
-        --prefer-dist \
-        --no-dev \
-        --ignore-platform-reqs \
-        --optimize-autoloader \
-        --no-interaction \
-        --no-suggest
+	# We want to disable vendor-expose calls during composer install, as we run
+	# this manually later, but earlier releases of silverstripe/vendor-plugin
+	# have a bug in their 'none' mode implementation.
+	minversion="1.4.1"
+	currentversion="$(jq '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
+
+	if [ "$(printf '%s\n' "$minversion" "$currentversion" | sort -V | head -n1)" = "$minversion" ]; then
+		export SS_VENDOR_METHOD="none"
+	fi
+
+	echo "composer validate"
+	composer validate || true
+
+	echo "composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest"
+	composer install \
+		--no-progress \
+		--prefer-dist \
+		--no-dev \
+		--ignore-platform-reqs \
+		--optimize-autoloader \
+		--no-interaction \
+		--no-suggest
+}
+
+function composer_vendor_expose {
+	echo "composer vendor-expose copy"
+	composer vendor-expose copy
 }
 
 function composer_build {
-	echo "Running: Composer Production Build Task"
+	echo "composer run-script cloud-build"
 	composer run-script cloud-build
 }
 
 function nvm_switch {
 	if [[ -f ".nvmrc" ]]; then
-		echo "Running: Apply NVM Configuration"
+		echo "nvm use"
 		. /root/.nvm/nvm.sh --no-use
 		nvm use
 	else
@@ -37,25 +52,25 @@ function nvm_switch {
 
 function node_build {
 	if [[ -f "yarn.lock" ]]; then
-		echo "Running: Yarn Dependency Installation"
+		echo "yarn install --no-progress --non-interactive"
 		yarn install --no-progress --non-interactive
 
-		echo "Running: Yarn Production Build Task"
+		echo "yarn run cloud-build"
 		yarn run cloud-build
 	else
-		echo "Running: NPM Dependency Installation"
+		echo "npm install"
 		npm install
 
-		echo "Running: NPM Production Build Task"
+		echo "npm run cloud-build"
 		npm run cloud-build
 	fi
 
-	echo "Running: Purge Node Modules"
+	echo "rm -rf node_modules/"
 	rm -rf node_modules/
 }
 
 function package_source {
-	echo Packaging up source code
+	echo "Packaging up source code"
 	WORKING_DIR=${PWD##*/}
 	cd ../
 	mkdir -p site
