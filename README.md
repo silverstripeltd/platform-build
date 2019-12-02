@@ -8,9 +8,12 @@ This is a docker container that runs three commands:
 
  - composer validate
  - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
+ - composer vendor-expose copy
 
-and lastly, the silverstripe [vendor plugin](https://github.com/silverstripe/vendor-plugin-helper)
- - vendor-plugin-helper copy ./
+ If present in the codebase, it will also run the following scripts:
+
+ - npm/yarn run cloud-build (after running npm/yarn install)
+ - composer run-script cloud-build
 
 ## Example usage
 

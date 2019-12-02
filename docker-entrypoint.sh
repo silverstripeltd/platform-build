@@ -22,15 +22,15 @@ fi
 
 composer_install
 
-# Run NPM/Yarn build script if the scp-build command is defined
-if [[ -f package.json && "`cat package.json | jq '.scripts["scp-build"]?'`" != "null" ]]; then
+# Run NPM/Yarn build script if the cloud-build command is defined
+if [[ -f package.json && "`cat package.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
     nvm_switch
 
     node_build
 fi
 
-# Run Composer build script if the scp-build command is defined
-if [[ -f composer.json && "`cat composer.json | jq '.scripts["scp-build"]?'`" != "null" ]]; then
+# Run Composer build script if the cloud-build command is defined
+if [[ -f composer.json && "`cat composer.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
 	composer_build
 fi
 

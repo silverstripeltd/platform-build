@@ -22,7 +22,7 @@ function composer_install {
 
 function composer_build {
 	echo "Running: Composer Production Build Task"
-	composer run-script scp-build
+	composer run-script cloud-build
 }
 
 function nvm_switch {
@@ -41,13 +41,13 @@ function node_build {
 		yarn install --no-progress --non-interactive
 
 		echo "Running: Yarn Production Build Task"
-		yarn run scp-build
+		yarn run cloud-build
 	else
 		echo "Running: NPM Dependency Installation"
 		npm install
 
 		echo "Running: NPM Production Build Task"
-		npm run scp-build
+		npm run cloud-build
 	fi
 
 	echo "Running: Purge Node Modules"
