@@ -9,11 +9,16 @@ function composer_install {
 	# We want to disable vendor-expose calls during composer install, as we run
 	# this manually later, but earlier releases of silverstripe/vendor-plugin
 	# have a bug in their 'none' mode implementation.
-	minversion="1.4.1"
-	currentversion="$(jq '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
+	if [ -f "composer.lock" ]; then
+		minversion="1.4.1"
+		currentversion="$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
 
-	if [ "$(printf '%s\n' "$minversion" "$currentversion" | sort -V | head -n1)" = "$minversion" ]; then
-		export SS_VENDOR_METHOD="none"
+		if [ "$(printf '%s\n' "$minversion" "$currentversion" | sort -V | head -n1)" = "$minversion" ]; then
+			echo "silverstripe/vendor-plugin 1.4.1+ found, deferring vendor-expose"
+			export SS_VENDOR_METHOD="none"
+		else
+			echo "Please update silverstripe/vendor-plugin to 1.4.1 or later to avoid triggering vendor-expose twice during deployment"
+		fi
 	fi
 
 	echo "composer validate"
