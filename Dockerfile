@@ -1,4 +1,4 @@
-FROM node:10@sha256:2ac200a8175fbcdc3cda1b3ab384ba02b673ded7c06aa6bf9c41b9f9463d78c2
+FROM node:10@sha256:93e9a9283f0e2ead937a8f77a2c72b18f80005c10b57b4f1cfd40d2b3aa6595f
 
 RUN apt-get update && apt-get install -y curl php-cli git jq
 
@@ -21,10 +21,10 @@ RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > i
 ENV NVM_EXPECTED_HASH="d41d8cd98f00b204e9800998ecf8427e  -"
 RUN if [ "`md5sum << install.sh`" != "$NVM_EXPECTED_HASH" ]; then exit 1; fi;
 
-# Install NVM without a default Node binary, add 6 + 8 + 10
+# Install NVM without a default Node binary, add 6 + 8 + 10 + 12
 ENV NODE_VERSION=
 RUN bash install.sh
-RUN . $NVM_DIR/nvm.sh && nvm install v6 && nvm install v8 && nvm install v10
+RUN . $NVM_DIR/nvm.sh && nvm install v6 && nvm install v8 && nvm install v10 && nvm install v12
 
 COPY funcs.sh /funcs.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
