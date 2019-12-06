@@ -20,6 +20,11 @@ else
 	echo "Using deploy key ${FINGER_PRINT}"
 fi
 
+# Attempt to disable vendor-expose during composer install (CMS 4+)
+if [[ -f composer.lock && "$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin")')" != "" ]]; then
+	disable_postinstall_vendor_expose
+fi
+
 composer_install
 
 # Run NPM/Yarn build script if the cloud-build command is defined
@@ -34,7 +39,8 @@ if [[ -f composer.json && "`cat composer.json | jq '.scripts["cloud-build"]?'`" 
 	composer_build
 fi
 
-if [[ -f vendor/silverstripe/vendor-plugin/composer.json ]]; then
+# Manually run vendor-expose once scripts have run (CMS 4+)
+if [[ -f composer.lock && "$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin")')" != "" ]]; then
 	composer_vendor_expose
 fi
 

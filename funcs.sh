@@ -1,3 +1,19 @@
+# We want to disable vendor-expose calls during composer install, as we run
+# this manually later, but earlier releases of silverstripe/vendor-plugin
+# have a broken 'none' mode implementation, so we fall back to 'copy' mode.
+function disable_postinstall_vendor_expose {
+	safeversion="1.4.1"
+	currentversion="$(cat composer.lock | jq -r '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
+
+	if [ "$(printf '%s\n' "$safeversion" "$currentversion" | sort -V | head -n1)" = "$safeversion" ]; then
+		echo "silverstripe/vendor-plugin $currentversion found, deferring vendor-expose"
+		export SS_VENDOR_METHOD="none"
+	else
+		echo "Please update silverstripe/vendor-plugin to 1.4.1 or later to avoid triggering vendor-expose twice during deployment"
+		export SS_VENDOR_METHOD="copy" # Avoids symlink generation
+	fi
+}
+
 function composer_install {
 	if [ ! -f "composer.json" ]; then
 		echo "No composer.json present, skipping composer install."
@@ -5,21 +21,6 @@ function composer_install {
 	fi
 
 	export COMPOSER_PROCESS_TIMEOUT=1200
-
-	# We want to disable vendor-expose calls during composer install, as we run
-	# this manually later, but earlier releases of silverstripe/vendor-plugin
-	# have a bug in their 'none' mode implementation.
-	if [ -f "composer.lock" ]; then
-		minversion="1.4.1"
-		currentversion="$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
-
-		if [ "$(printf '%s\n' "$minversion" "$currentversion" | sort -V | head -n1)" = "$minversion" ]; then
-			echo "silverstripe/vendor-plugin 1.4.1+ found, deferring vendor-expose"
-			export SS_VENDOR_METHOD="none"
-		else
-			echo "Please update silverstripe/vendor-plugin to 1.4.1 or later to avoid triggering vendor-expose twice during deployment"
-		fi
-	fi
 
 	echo "composer validate"
 	composer validate || true
