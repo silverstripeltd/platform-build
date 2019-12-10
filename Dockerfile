@@ -1,4 +1,4 @@
-FROM node:10@sha256:93e9a9283f0e2ead937a8f77a2c72b18f80005c10b57b4f1cfd40d2b3aa6595f
+FROM node:10-buster@sha256:c5a1bf0d035d9eea4d1cae7099bb5e1089bf8a439c25d0f19d010e909e9d7407
 
 RUN apt-get update && apt-get install -y curl php-cli git jq
 
