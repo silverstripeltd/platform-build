@@ -12,6 +12,9 @@ RUN chmod 400 ~/.ssh/config
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"
 RUN php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
+# Install legacy vendor-plugin-helper module as a fallback for exposing assets
+RUN composer global require silverstripe/vendor-plugin-helper
+
 # Fetch NVM installer and prep destination
 ENV NVM_DIR=/root/.nvm
 RUN mkdir -p /root/.nvm
