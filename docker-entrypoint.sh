@@ -20,16 +20,16 @@ else
 	echo "Using deploy key ${FINGER_PRINT}"
 fi
 
-# Attempt to disable vendor-expose during composer install (CMS 4+) - disabled until composer scripts are enabled again
-# if [[ -f composer.lock && "$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin")')" != "" ]]; then
-# 	disable_postinstall_vendor_expose
-# fi
+# Disable vendor-expose during composer install (CMS 4+)
+if [[ -f composer.lock && "$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin")')" != "" ]]; then
+	disable_postinstall_vendor_expose
+fi
 
 composer_install
 
 # Run NPM/Yarn build script if the cloud-build command is defined
 if [[ -f package.json && "`cat package.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
-	nvm_switch
+	set_node_version
 
 	node_build
 fi
