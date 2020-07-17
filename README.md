@@ -34,13 +34,27 @@ docker run \
     silverstripe/platform-build
 ```
 
+### composer_cache
+
 `--volume composer_cache:/tmp/cache`
 
 Creates a composer_cache volume if it doesn't exists and mounts that into the composer home folder `tmp`
 
+### SSH credentials for private repo access
+
 `--volume ~/.ssh/id_rsa:/root/.ssh/id_rsa`
 
 If your source code has private repositories, you will need to mount the private key (deploy key) into the container (preferable as read only)
+
+if you are developing locally there is a good chance your private key has a passphrase or some other setup which might mean it is easier to use ssh agent forwarding. For example:
+
+```
+--volume $SSH_AUTH_SOCK:/ssh-agent \
+--env SSH_AUTH_SOCK=/ssh-agent \
+```
+on mac there is a different path setting see:  https://docs.docker.com/docker-for-mac/osxfs/#ssh-agent-forwarding
+
+### Source code directory
 
 `--volume $PWD:/app`
 
