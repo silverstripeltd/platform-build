@@ -20,6 +20,9 @@ else
 	echo "Using deploy key ${FINGER_PRINT}"
 fi
 
+# Provide simple fingerprint for detecting that a deployment is in progress
+export CLOUD_BUILD=1
+
 # Disable vendor-expose during composer install (CMS 4+)
 if [[ -f composer.lock && "$(cat composer.lock | jq '.packages[] | select(.name == "silverstripe/vendor-plugin")')" != "" ]]; then
 	disable_postinstall_vendor_expose

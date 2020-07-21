@@ -9,11 +9,6 @@ function disable_postinstall_vendor_expose {
 	# Default to 'copy' mode to avoid symlink generation
 	export SS_VENDOR_METHOD="copy"
 
-	# If Composer scripts are disabled during install, vendor-expose is also disabled, no action required
-	if [ -f ".platform.yml" ] && [[ "`yq r .platform.yml build.composer_scripts`" != "true" ]]; then
-		return 0
-	fi
-
 	safeversion="1.4.1"
 	currentversion="$(cat composer.lock | jq -r '.packages[] | select(.name == "silverstripe/vendor-plugin") | .version')"
 
@@ -43,21 +38,6 @@ function composer_install {
 
 	echo "composer validate"
 	composer validate || true
-
-	# Disable scripts if not specifically enabled by project
-	if [ ! -f ".platform.yml" ] || [[ "`yq r .platform.yml build.composer_scripts`" != "true" ]]; then
-		echo "composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest --no-scripts"
-		composer install \
-			--no-progress \
-			--prefer-dist \
-			--no-dev \
-			--ignore-platform-reqs \
-			--optimize-autoloader \
-			--no-interaction \
-			--no-suggest \
-			--no-scripts
-		return $?
-	fi
 
 	echo "composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest"
 	composer install \

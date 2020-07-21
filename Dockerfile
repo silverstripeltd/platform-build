@@ -1,6 +1,5 @@
 # Core tools / PHP extensions
 FROM composer:1@sha256:c40f08d7c70313486c41ff28a9b4b34e6a2b9e81eb037ac40ca30c6379220bc7 as composer
-FROM mikefarah/yq:3@sha256:26b9bdceeeeb9c15bb340a4a8ec9bae80be562cb2da5515490fde9d641a2c006 as yq
 FROM php:7.3-cli@sha256:a4f7d5f3887638eb29b220e50e0ebba2fde3c4a7c764b58d5ff826ced8cc7dac
 
 # Install core dependencies
@@ -10,7 +9,6 @@ RUN pecl install zip && docker-php-ext-enable zip
 
 # Pull Composer and yq from respective base images
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-COPY --from=yq /usr/bin/yq /usr/local/bin/yq
 
 # Allow uninhibited SSH connections to support fetching external resources
 RUN mkdir -p ~/.ssh

@@ -7,20 +7,13 @@ Compacts a Silverstripe CMS project into a deployable bundle using Composer and 
 This is a Docker container that runs three primary commands:
 
  - composer validate
- - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest --no-scripts
+ - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
  - composer vendor-expose copy
 
 If present in the codebase, it will also run the following scripts:
 
  - npm/yarn run cloud-build (after running npm/yarn install)
  - composer run-script cloud-build
-
-Composer scripts can be enabled during the install process by adding the following configuration to your `.platform.yml` file:
-
-```yml
-build:
-  composer_scripts: true
-```
 
 ## Example usage
 
@@ -51,7 +44,6 @@ The source code will be build from the `/app` 'inside' the container, so make su
 This docker image depends on a set of base images for key requirements:
 
 - composer:1
-- mikefarah/yq:3
 - php:7.3-cli
 
 We lock these to explicit releases via their hash, to reduce the risk of pulling
@@ -72,5 +64,4 @@ This Docker image does not yet have an automated test harness, so adjustments sh
 - Silverstripe CMS 3 / 4.0 (old directory structure) / 4.3+
 - Presence of cloud-build script in package.json / composer.json
 - Use of Yarn vs NPM
-- Composer scripts enabled / disabled via .platform.yml
 - silverstripe/vendor-plugin version 1.x-dev / <1.4.1 / 1.4.1+
