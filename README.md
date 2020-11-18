@@ -52,7 +52,7 @@ If you are developing locally, there is a good chance your private key has a pas
 --volume $SSH_AUTH_SOCK:/ssh-agent \
 --env SSH_AUTH_SOCK=/ssh-agent \
 ```
-on mac there is a different path setting see:  https://docs.docker.com/docker-for-mac/osxfs/#ssh-agent-forwarding
+On macOS, there is a different path setting - see:  https://docs.docker.com/docker-for-mac/osxfs/#ssh-agent-forwarding
 
 ### Source code directory
 
