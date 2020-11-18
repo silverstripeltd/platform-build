@@ -46,7 +46,7 @@ Creates a composer_cache volume if it doesn't exists and mounts that into the co
 
 If your source code has private repositories, you will need to mount the private key (deploy key) into the container (preferable as read only)
 
-if you are developing locally there is a good chance your private key has a passphrase or some other setup which might mean it is easier to use ssh agent forwarding. For example:
+If you are developing locally, there is a good chance your private key has a passphrase or some other setup which might mean it is easier to use ssh agent forwarding. For example:
 
 ```
 --volume $SSH_AUTH_SOCK:/ssh-agent \
