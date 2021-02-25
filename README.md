@@ -1,6 +1,8 @@
 # Platform Build
 
-Compacts a Silverstripe CMS project into a deployable bundle using Composer and related tools.
+Transforms a Silverstripe CMS project into a deployable bundle using Composer
+and related tools. This is primarily designed for use during deployments to
+[Silverstripe Cloud](https://silverstripe.cloud).
 
 ## What is this?
 
@@ -15,7 +17,9 @@ If present in the codebase, it will also run the following scripts:
  - npm/yarn run cloud-build (after running npm/yarn install)
  - composer run-script cloud-build
 
-## Example usage
+## Example usage / local debugging
+
+You can run the container against a project locally to test or diagnose issues:
 
 ```
 docker run \
@@ -29,39 +33,19 @@ docker run \
 
 `--volume composer_cache:/tmp/cache`
 
-Creates a composer_cache volume if it doesn't exists and mounts that into the composer home folder `tmp`
+Creates a composer_cache volume if it doesn't exists and mounts that into the
+Composer home folder `tmp`
 
 `--volume ~/.ssh/id_rsa:/root/.ssh/id_rsa`
 
-If your source code has private repositories, you will need to mount the private key (deploy key) into the container (preferable as read only)
+If your source code has private repositories, you will need to mount your
+private key (deploy key) into the container (preferable as read only)
 
 `--volume $PWD:/app`
 
-The source code will be build from the `/app` 'inside' the container, so make sure you mount source code into that
+The source code will be built from the `/app` directory inside the container, so
+make sure you mount your source code into that.
 
-## Updating base images
+## Maintenance
 
-This docker image depends on a set of base images for key requirements:
-
-- composer:1
-- php:7.3-cli
-
-We lock these to explicit releases via their hash, to reduce the risk of pulling
-in unwanted changes when rebuilding the image, but it's important to update
-these from time to time. You can do this by replacing the hash with the latest
-version, either by looking it up in Docker Hub or by running the following
-commands:
-
-```
-> docker pull composer:1
-> docker images --no-trunc --quiet composer:1
-```
-
-## Testing
-
-This Docker image does not yet have an automated test harness, so adjustments should be tested manually against the various permutations of project contents that may be encountered:
-
-- Silverstripe CMS 3 / 4.0 (old directory structure) / 4.3+
-- Presence of cloud-build script in package.json / composer.json
-- Use of Yarn vs NPM
-- silverstripe/vendor-plugin version 1.x-dev / <1.4.1 / 1.4.1+
+See [maintenance](docs/maintenance.md).
