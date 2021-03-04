@@ -1,5 +1,5 @@
 # Core tools / PHP extensions
-FROM composer:1@sha256:c40f08d7c70313486c41ff28a9b4b34e6a2b9e81eb037ac40ca30c6379220bc7 as composer
+FROM composer:1@sha256:010326d7c2096c956b29edc175f656fedaf41a65d1f4da3e93c42b1118b27b90 AS composer
 FROM php:7.3-cli@sha256:a4f7d5f3887638eb29b220e50e0ebba2fde3c4a7c764b58d5ff826ced8cc7dac
 
 # Install core dependencies
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y curl git jq zip libzip-dev gnupg
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN pecl install zip && docker-php-ext-enable zip
 
-# Pull Composer and yq from respective base images
+# Pull Composer from base image
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 # Allow uninhibited SSH connections to support fetching external resources
