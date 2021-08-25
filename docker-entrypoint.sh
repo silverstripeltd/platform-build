@@ -20,6 +20,9 @@ else
 	echo "Using deploy key ${FINGER_PRINT}"
 fi
 
+# Docs mention the cache is at /tmp/cache. Make sure this is true!
+export COMPOSER_HOME="/tmp"
+
 # Provide simple fingerprint for detecting that a deployment is in progress
 export CLOUD_BUILD=1
 
