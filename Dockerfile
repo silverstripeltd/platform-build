@@ -1,6 +1,6 @@
 # Core tools / PHP extensions
-FROM composer:1@sha256:010326d7c2096c956b29edc175f656fedaf41a65d1f4da3e93c42b1118b27b90 AS composer
-FROM php:7.3-cli@sha256:a4f7d5f3887638eb29b220e50e0ebba2fde3c4a7c764b58d5ff826ced8cc7dac
+FROM composer:1@sha256:f18b06a0bc37800190e7e6d6fcec33dcc48679c1b6ad28993f81a5488abd7041 AS composer
+FROM php:7.3-cli@sha256:898f13367b6e0471a003607a1c0bd3f942e61732eb6380d9b79b1f4ce4759128
 
 # Install core dependencies
 RUN apt-get update && apt-get install -y curl git jq zip libzip-dev gnupg
