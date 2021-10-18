@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+php -v | egrep '^PHP'
+composer --version
+
 source /funcs.sh
 
 if [ -d ".git" ]; then

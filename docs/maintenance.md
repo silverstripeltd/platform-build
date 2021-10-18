@@ -4,8 +4,8 @@
 
 This Docker image depends on a set of base images for key requirements:
 
-- composer:1
-- php:7.3-cli
+- composer:2
+- php:7.4-cli
 
 We lock these to explicit releases via their hash, to reduce the risk of pulling
 in unwanted changes when rebuilding the image, but it's important to update
@@ -28,7 +28,7 @@ tag and push it:
 
 ```
 > docker build .
-> docker tag silverstripe/platform-build:1.2.1 [built-hash]
+> docker tag [image-id] silverstripe/platform-build:1.2.1
 > docker push silverstripe/platform-build:1.2.1
 ```
 
