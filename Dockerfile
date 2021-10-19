@@ -1,6 +1,6 @@
 # Core tools / PHP extensions
-FROM composer:1@sha256:f18b06a0bc37800190e7e6d6fcec33dcc48679c1b6ad28993f81a5488abd7041 AS composer
-FROM php:7.3-cli@sha256:898f13367b6e0471a003607a1c0bd3f942e61732eb6380d9b79b1f4ce4759128
+FROM composer:2@sha256:e724f5bb40448f6548cc27706ec5b1e0494c10915b08d6141dce973483ae2611 AS composer
+FROM php:7.4-cli@sha256:cbd8fd538f72258eb531ac9708d29a2b370c8ab933c9cc056e69100a93e01768
 
 # Install core dependencies
 RUN apt-get update && apt-get install -y curl git jq zip libzip-dev gnupg
@@ -22,16 +22,16 @@ RUN composer global require silverstripe/vendor-plugin-helper
 # Fetch NVM installer and prep destination
 ENV NVM_DIR=/root/.nvm
 RUN mkdir -p /root/.nvm
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh > install.sh
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh > install.sh
 
 # Verify that the NVM installer remains uncompromised - bail on the build if not
-ENV NVM_EXPECTED_HASH="fbd8e6289e6e83d0809ef96bf73cd699  install.sh"
+ENV NVM_EXPECTED_HASH="9edb01eb5d3da634454ca8e02d4708f8  install.sh"
 RUN if [ "`md5sum install.sh`" != "$NVM_EXPECTED_HASH" ]; then exit 1; fi;
 
-# Install NVM without a default Node binary, add 6 + 8 + 10 + 12
+# Install NVM without a default Node binary, add all LTS versions
 ENV NODE_VERSION=
 RUN bash install.sh
-RUN . $NVM_DIR/nvm.sh && nvm install v6 && nvm install v8 && nvm install v10 && nvm install v12
+RUN . $NVM_DIR/nvm.sh && nvm install v6 && nvm install v8 && nvm install v10 && nvm install v12 && nvm install v14 && nvm install v16
 
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
