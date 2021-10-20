@@ -33,16 +33,21 @@ fi
 
 composer_install
 
-# Run NPM/Yarn build script if the cloud-build command is defined
-if [[ -f package.json && "`cat package.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
-	set_node_version
+if [ "${CLOUD_BUILD_DISABLED}" == "" ]; then
+	echo "Running cloud-build..."
 
-	node_build
-fi
+	# Run NPM/Yarn build script if the cloud-build command is defined
+	if [[ -f package.json && "`cat package.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
+		set_node_version
 
-# Run Composer build script if the cloud-build command is defined
-if [[ -f composer.json && "`cat composer.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
-	composer_build
+		node_build
+	fi
+
+	# Run Composer build script if the cloud-build command is defined
+	if [[ -f composer.json && "`cat composer.json | jq '.scripts["cloud-build"]?'`" != "null" ]]; then
+		composer_build
+	fi
+
 fi
 
 # Manually run vendor-expose once scripts have run (CMS 4+)
