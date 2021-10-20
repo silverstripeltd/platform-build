@@ -12,7 +12,7 @@ This is a Docker container that runs three primary commands:
  - composer install --no-progress --prefer-dist --no-dev --ignore-platform-reqs --optimize-autoloader --no-interaction --no-suggest
  - composer vendor-expose copy
 
-If present in the codebase, it will also run the following scripts:
+If present in the codebase, and CLOUD_BUILD_DISABLED env variable is not set, it will also run the following scripts:
 
  - npm/yarn run cloud-build (after running npm/yarn install)
  - composer run-script cloud-build
