@@ -39,6 +39,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update && apt-get install -y --no-install-recommends yarn
 
 COPY funcs.sh /funcs.sh
+COPY parse_composer.php /parse_composer.php
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 WORKDIR /app

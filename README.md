@@ -17,6 +17,8 @@ If present in the codebase, and CLOUD_BUILD_DISABLED env variable is not set, it
  - npm/yarn run cloud-build (after running npm/yarn install)
  - composer run-script cloud-build
 
+If PARSE_COMPOSER is set, the image will also run parse_composer.php script copied from CWP.
+
 ## Example usage / local debugging
 
 You can run the container against a project locally to test or diagnose issues:
