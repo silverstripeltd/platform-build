@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-php -v | egrep '^PHP'
+php -v | grep -E '^PHP'
 composer --version
 
 source /funcs.sh

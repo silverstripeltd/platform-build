@@ -5,7 +5,7 @@
 This Docker image depends on a set of base images for key requirements:
 
 - composer:2
-- php:7.4-cli
+- php:8.2-cli
 
 We lock these to explicit releases via their hash, to reduce the risk of pulling
 in unwanted changes when rebuilding the image, but it's important to update
