@@ -75,8 +75,8 @@ function set_node_version {
 		echo "nvm use"
 		nvm use
 	else
-		echo "No .nvmrc found; Defaulting to Node 10"
-		nvm use 10
+		echo "No .nvmrc found; Defaulting to Node 16"
+		nvm use 16
 	fi
 }
 
