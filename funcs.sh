@@ -82,8 +82,8 @@ function set_node_version {
 
 function node_build {
 	if [[ -f "yarn.lock" ]]; then
-		echo "yarn install --no-progress --non-interactive"
-		yarn install --no-progress --non-interactive
+		echo "yarn install --no-progress --non-interactive --frozen-lockfile"
+		yarn install --no-progress --non-interactive --frozen-lockfile
 
 		echo "yarn run cloud-build"
 		yarn run cloud-build
